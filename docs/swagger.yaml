@@ -1,0 +1,294 @@
+definitions:
+  types.CreateRequest:
+    properties:
+      name:
+        type: string
+      owner:
+        type: string
+      password:
+        type: string
+    required:
+    - name
+    - owner
+    type: object
+info:
+  contact: {}
+paths:
+  /api/games:
+    get:
+      description: passing in the appropriate options, you can search for games in
+        the system
+      parameters:
+      - description: gameId
+        in: query
+        name: name
+        type: string
+      - description: password
+        in: query
+        name: stauts
+        type: string
+      - description: "0"
+        in: header
+        name: page
+        type: integer
+      - description: "50"
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Game Search
+      tags:
+      - Public
+      - Player
+    post:
+      consumes:
+      - application/json
+      description: By passing in the appropriate options, you can create a game. Password
+        is optional.
+      parameters:
+      - description: Game object that needs to be created
+        in: body
+        name: game
+        required: true
+        schema:
+          $ref: '#/definitions/types.CreateRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Game Created
+          schema:
+            additionalProperties: true
+            type: object
+        "400":
+          description: Invalid input
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Create Game
+      tags:
+      - Public
+      - Player
+  /api/games/{gameId}:
+    get:
+      consumes:
+      - application/json
+      description: Gets the content of a game. Returns an error if it doesn't exist.
+      parameters:
+      - description: Game ID
+        in: path
+        name: gameId
+        required: true
+        type: string
+      - description: Password
+        in: header
+        name: password
+        required: true
+        type: string
+      - description: Player ID
+        in: header
+        name: player
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get Game
+      tags:
+      - Player
+    put:
+      consumes:
+      - application/json
+      description: Gets the content of a game. Returns an error if it doesn't exist.
+      parameters:
+      - description: Game ID
+        in: path
+        name: gameId
+        required: true
+        type: string
+      - description: Password
+        in: header
+        name: password
+        required: true
+        type: string
+      - description: Player ID
+        in: header
+        name: player
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Join Game
+      tags:
+      - Player
+  /api/games/{gameId}/rounds:
+    get:
+      consumes:
+      - application/json
+      description: Gets the rounds of a game.
+      parameters:
+      - description: Game ID
+        in: path
+        name: gameId
+        required: true
+        type: string
+      - description: Password
+        in: header
+        name: password
+        required: true
+        type: string
+      - description: Player ID
+        in: header
+        name: player
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get Rounds
+      tags:
+      - Player
+  /api/games/{gameId}/rounds/{roundId}:
+    get:
+      consumes:
+      - application/json
+      description: Gets the content of a specific round.
+      parameters:
+      - description: Game ID
+        in: path
+        name: gameId
+        required: true
+        type: string
+      - description: Round ID
+        in: path
+        name: roundId
+        required: true
+        type: string
+      - description: Password
+        in: header
+        name: password
+        required: true
+        type: string
+      - description: Player ID
+        in: header
+        name: player
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Show Round
+      tags:
+      - Player
+  /api/games/{gameId}/start:
+    head:
+      consumes:
+      - application/json
+      description: Initiate Game if the amount of players is reach
+      parameters:
+      - description: Game ID
+        in: path
+        name: gameId
+        required: true
+        type: string
+      - description: Password
+        in: header
+        name: password
+        required: true
+        type: string
+      - description: Player ID
+        in: header
+        name: player
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Game Start
+      tags:
+      - Player
+  /api/hello:
+    get:
+      description: Returns a simple hello message
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get Hello Message
+      tags:
+      - Example
+  /ws:
+    get:
+      description: Establish a WebSocket connection to send and receive messages.
+      produces:
+      - application/json
+      responses:
+        "101":
+          description: Switching Protocols
+          schema:
+            type: string
+      summary: WebSocket Connection
+      tags:
+      - WebSocket
+swagger: "2.0"
